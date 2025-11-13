@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Dossier",
+  "version": "1.0.1",
+  "description": "A Chrome extension that can be used to ask questions about the current web page",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "contextMenus",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "action": {
+    "default_title": "Dossier"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "icons": {
+    "16": "icons/icon16.svg",
+    "32": "icons/icon32.svg",
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  }
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier - Your Collections</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 60 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Square -->
+                        <rect x="2" y="2" width="14" height="14" fill="currentColor"/>
+                        <!-- Circle -->
+                        <circle cx="31" cy="9" r="7" fill="currentColor"/>
+                        <!-- Triangle -->
+                        <path d="M52 16 L45 2 L59 2 Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="user-section">
+                    <a href="bookmarks.html" class="nav-btn" title="All Bookmarks">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <div class="user-avatar">
+                        <span id="userInitials">U</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Categories Header -->
+            <section class="page-header">
+                <div>
+                    <h1 class="page-title">Your Collections</h1>
+                    <p class="page-subtitle">Organize your bookmarks into meaningful categories</p>
+                </div>
+                <button class="btn-primary" onclick="openCreateCategoryModal()">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    New Collection
+                </button>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading your collections...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <h3>No collections yet</h3>
+                <p>Create your first collection to organize your bookmarks</p>
+                <button class="btn-primary" onclick="openCreateCategoryModal()" style="margin-top: 1.5rem;">
+                    Create Collection
+                </button>
+            </div>
+
+            <!-- Categories Grid -->
+            <section id="categoriesSection" class="categories-section" style="display: none;">
+                <div id="categoriesGrid" class="categories-grid">
+                    <!-- Categories will be populated here -->
+                </div>
+                
+                <!-- Pagination -->
+                <div id="categoryPagination" class="pagination">
+                    <!-- Pagination will be populated here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Create/Edit Category Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">New Collection</h3>
+                <button class="modal-close" onclick="closeCategoryModal()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">Name</label>
+                    <input 
+                        type="text" 
+                        id="categoryName" 
+                        placeholder="e.g., Technology, Travel, Recipes" 
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description (optional)</label>
+                    <textarea 
+                        id="categoryDescription" 
+                        placeholder="Briefly describe what this collection is about"
+                        rows="3"
+                    ></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <span id="categoryModalBtn">Create</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Details Modal -->
+    <div id="categoryDetailsModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <div>
+                    <h3 id="detailsCategoryName">Category Name</h3>
+                    <p id="detailsCategoryDescription" class="modal-subtitle"></p>
+                </div>
+                <button class="modal-close" onclick="closeCategoryDetailsModal()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="category-details-actions">
+                    <div class="details-action-buttons">
+                        <button class="btn-secondary" onclick="editCurrentCategory()">
+                            <svg class="btn-icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Edit
+                        </button>
+                        <button class="btn-primary" onclick="openAddBookmarksModal()">
+                            <svg class="btn-icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            Add Bookmarks
+                        </button>
+                    </div>
+                    <span id="detailsBookmarkCount" class="count-badge">0 bookmarks</span>
+                </div>
+                
+                <div id="categoryBookmarks" class="category-bookmarks">
+                    <!-- Bookmarks will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bookmarks Modal -->
+    <div id="addBookmarksModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Add Bookmarks to Collection</h3>
+                <button class="modal-close" onclick="closeAddBookmarksModal()">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="modal-subtitle" style="margin-bottom: 1.5rem;">Select bookmarks to add to this collection</p>
+            <div class="modal-body">
+                <div id="addBookmarksList" class="add-bookmarks-list">
+                    <!-- Bookmarks checkboxes will be populated here -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeAddBookmarksModal()">Cancel</button>
+                <button type="button" class="btn-primary" onclick="confirmAddBookmarks()">Add Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Category Modal -->
+    <div id="deleteCategoryModal" class="modal">
+        <div class="modal-content">
+            <h3>Delete Collection</h3>
+            <p>Are you sure you want to delete this collection? The bookmarks will not be deleted, only the collection.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeDeleteCategoryModal()">Cancel</button>
+                <button class="btn-danger" onclick="confirmDeleteCategory()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Floating Chat Button -->
+    <button id="chatFloatingButton" class="chat-floating-button" title="Open AI Chat">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="9" cy="10" r="1" fill="currentColor"/>
+            <circle cx="12" cy="10" r="1" fill="currentColor"/>
+            <circle cx="15" cy="10" r="1" fill="currentColor"/>
+        </svg>
+    </button>
+
+    <!-- Chat Panel -->
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-panel-header">
+            <div class="chat-header-left">
+                <button id="toggleSidebar" class="sidebar-toggle-btn" title="Toggle Sidebar">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h3>Dossier Assistant</h3>
+            </div>
+            <button id="closeChatPanel" class="close-chat-btn" title="Close Chat">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="chat-panel-body">
+            <!-- Sidebar -->
+            <div id="chatSidebar" class="chat-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-header">
+                        <h4>My Knowledge</h4>
+                    </div>
+                    <div id="collectionsTree" class="sidebar-list">
+                        <div class="sidebar-loading">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Area -->
+            <div class="chat-main">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="chat-welcome">
+                        <svg class="welcome-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h3>Chat with AI</h3>
+                        <p>Ask me anything about your bookmarks and collections!</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <textarea id="chatInput" placeholder="Ask me anything..." rows="1"></textarea>
+                    <button id="chatSendBtn" class="chat-send-btn">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="22" y1="2" x2="11" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="categories.js"></script>
+    <script src="chat-interface.js"></script>
+</body>
+</html>
