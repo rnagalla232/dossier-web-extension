@@ -1,4 +1,4 @@
-# Mage - QA Chat Chrome Extension
+# Dossier - Chrome Extension
 
 A modern Chrome extension that opens as a side panel with an AI-powered QA chat interface. Ask questions and get intelligent responses right from your browser.
 

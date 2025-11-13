@@ -53,3 +53,8 @@ jspm_packages/
 # Build outputs
 dist/
 build/
+
+# Webpack outputs
+extension/content.js
+extension/content.js.map
+*.js.map
